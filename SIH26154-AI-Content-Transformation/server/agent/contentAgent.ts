@@ -25,13 +25,24 @@ const openrouterBaseUrl = () =>
   (process.env.OPENROUTER_BASE_URL || 'https://openrouter.ai/api/v1').replace(/\/+$/, '');
 
 function parseJson(text: string) {
-  const cleaned = text.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/\s*```$/i, '').trim();
+  let cleaned = text.trim();
+  cleaned = cleaned.replace(/^```(?:json)?\s*([\s\S]*?)\s*```$/i, '$1').trim();
   try {
     return JSON.parse(cleaned);
   } catch {
     const start = cleaned.indexOf('{');
     const end = cleaned.lastIndexOf('}');
-    if (start >= 0 && end > start) return JSON.parse(cleaned.slice(start, end + 1));
+    if (start >= 0 && end > start) {
+      const slice = cleaned.slice(start, end + 1);
+      try {
+        return JSON.parse(slice);
+      } catch {
+        try {
+          const sanitized = slice.replace(/,\s*([\]}])/g, '$1');
+          return JSON.parse(sanitized);
+        } catch {}
+      }
+    }
     throw new Error('The AI returned an invalid JSON response. Please try again.');
   }
 }
@@ -72,7 +83,8 @@ async function askOpenRouter(parts: any[], system: string) {
     },
     body: JSON.stringify({
       model: model(),
-      max_tokens: Number(process.env.AGENTIC_AI_MAX_TOKENS || 4096),
+      response_format: { type: 'json_object' },
+      max_tokens: Number(process.env.AGENTIC_AI_MAX_TOKENS || 2000),
       messages: [
         { role: 'system', content: system },
         { role: 'user', content: userContent },

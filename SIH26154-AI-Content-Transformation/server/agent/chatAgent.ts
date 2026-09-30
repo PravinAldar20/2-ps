@@ -126,7 +126,7 @@ export async function chatWithAssistant(req: {
       },
       body: JSON.stringify({
         model: model(),
-        max_tokens: Number(process.env.AGENTIC_AI_MAX_TOKENS || 4096),
+        max_tokens: Number(process.env.AGENTIC_AI_MAX_TOKENS || 1500),
         messages: apiMessages,
       }),
     });
