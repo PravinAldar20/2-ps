@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   AlertTriangle, ArrowRight, Check, CheckCircle2, ChevronDown, ClipboardCheck, Download,
-  FileAudio, FileImage, FileText, FileVideo, History, Image as ImageIcon, LogIn, LogOut,
-  Menu, Mic, MicOff, Play, RefreshCw, Save, Search, Send, Settings, ShieldCheck, Sparkles, Upload,
-  UserPlus, X, XCircle, Zap, MessageSquare, Plus, Edit2, Bot, Volume2
+  Eye, EyeOff, FileAudio, FileImage, FileText, FileVideo, History, Image as ImageIcon, Lock, LogIn, LogOut,
+  Mail, Menu, Mic, MicOff, Pause, Play, RefreshCw, Save, Search, Send, Settings, ShieldCheck, Sparkles, Upload,
+  User, UserPlus, Volume2, VolumeX, X, XCircle, Zap, MessageSquare, Plus, Edit2, Bot
 } from 'lucide-react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { isSupabaseConfigured, supabase } from './lib/supabase';
@@ -44,9 +44,31 @@ function Login() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
+
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isMuted, setIsMuted] = useState(true);
+
+  const togglePlay = () => {
+    if (!videoRef.current) return;
+    if (videoRef.current.paused) {
+      videoRef.current.play();
+      setIsPlaying(true);
+    } else {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    }
+  };
+
+  const toggleMute = () => {
+    if (!videoRef.current) return;
+    videoRef.current.muted = !videoRef.current.muted;
+    setIsMuted(videoRef.current.muted);
+  };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,79 +94,257 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center p-5">
-      <div className="w-full max-w-5xl grid lg:grid-cols-2 overflow-hidden rounded-3xl border border-white/10 bg-slate-900 shadow-2xl">
-        <div className="p-8 sm:p-12 bg-gradient-to-br from-blue-700 via-indigo-700 to-slate-950">
-          <div className="flex items-center gap-3 mb-12">
-            <div className="w-11 h-11 rounded-2xl bg-white/15 flex items-center justify-center">
-              <Sparkles />
+    <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden">
+      {/* Ambient background glow orbs */}
+      <div className="absolute top-[-10%] left-[-5%] w-[450px] h-[450px] rounded-full bg-blue-600/15 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-5%] w-[450px] h-[450px] rounded-full bg-indigo-600/15 blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-cyan-500/10 blur-[140px] pointer-events-none" />
+
+      {/* Main Container */}
+      <div className="w-full max-w-6xl grid lg:grid-cols-12 overflow-hidden rounded-3xl border border-white/10 bg-slate-900/90 shadow-2xl backdrop-blur-xl relative z-10">
+        {/* Left Column: Visual Showcase with Animated Video */}
+        <div className="lg:col-span-7 p-6 sm:p-10 flex flex-col justify-between bg-gradient-to-br from-slate-900 via-indigo-950/70 to-slate-950 border-b lg:border-b-0 lg:border-r border-white/10 relative">
+          <div>
+            {/* Header / Brand */}
+            <div className="flex items-center justify-between gap-3 mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/25 border border-white/20">
+                  <Sparkles className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <div className="font-black tracking-tight text-lg text-white">SIH26154 Content Transformation</div>
+                  <div className="text-[11px] text-blue-300 font-medium">SIH26154 • Gen AI Content Transformation</div>
+                </div>
+              </div>
+              <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] font-medium text-cyan-300">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400"></span>
+                </span>
+                <span>Live AI Engine</span>
+              </div>
             </div>
-            <div>
-              <div className="font-black tracking-tight text-xl">SIH26154 Content Transformation</div>
-              <div className="text-xs text-blue-200">SIH26154 • Gen AI Content Transformation</div>
+
+            {/* Video Showcase Card */}
+            <div className="relative my-4 rounded-2xl p-1 bg-gradient-to-b from-blue-500/30 via-indigo-500/15 to-transparent shadow-[0_0_40px_rgba(59,130,246,0.18)]">
+              <div className="relative overflow-hidden rounded-[14px] bg-slate-950 aspect-video group">
+                <video
+                  ref={videoRef}
+                  autoPlay
+                  loop
+                  muted={isMuted}
+                  playsInline
+                  poster="/login-animation-poster.jpg"
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+                >
+                  <source src="/login-animation.mp4" type="video/mp4" />
+                </video>
+
+                {/* Subtle vignette overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-black/20 pointer-events-none" />
+
+                {/* Floating Badge */}
+                <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-slate-900/80 backdrop-blur-md border border-white/15 text-[11px] font-semibold text-cyan-300 flex items-center gap-1.5 shadow-md">
+                  <Sparkles className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+                  <span>Interactive 3D UI</span>
+                </div>
+
+                {/* Video Controls (Play/Pause & Mute/Unmute) */}
+                <div className="absolute bottom-3 right-3 flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={toggleMute}
+                    title={isMuted ? 'Unmute' : 'Mute'}
+                    className="w-8 h-8 rounded-full bg-slate-900/80 backdrop-blur-md border border-white/20 text-white/90 hover:text-white hover:bg-slate-800 transition flex items-center justify-center shadow-lg"
+                  >
+                    {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={togglePlay}
+                    title={isPlaying ? 'Pause' : 'Play'}
+                    className="w-8 h-8 rounded-full bg-slate-900/80 backdrop-blur-md border border-white/20 text-white/90 hover:text-white hover:bg-slate-800 transition flex items-center justify-center shadow-lg"
+                  >
+                    {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-current ml-0.5" />}
+                  </button>
+                </div>
+              </div>
             </div>
+
+            {/* Typography */}
+            <h1 className="text-2xl sm:text-3xl font-black leading-tight mt-4 text-white">
+              One source.<br />Many verified outputs.
+            </h1>
+            <p className="mt-2 text-sm text-blue-100/80 leading-relaxed max-w-lg">
+              Transform reports, prompts, documents, images, audio and video into audience-specific
+              communication artefacts with a shared truth layer, verification checks, and dedicated AI voice assistant.
+            </p>
           </div>
-          <h1 className="text-4xl sm:text-5xl font-black leading-tight">
-            One source.<br />Many verified outputs.
-          </h1>
-          <p className="mt-5 text-blue-100 max-w-md leading-7">
-            Transform reports, prompts, documents, images, audio and video into audience-specific
-            communication artefacts with a shared truth layer, verification checks, and dedicated AI voice assistant.
-          </p>
-          <div className="mt-10 grid grid-cols-2 gap-3 text-sm">
+
+          {/* Feature Badges */}
+          <div className="mt-6 grid grid-cols-2 gap-2.5 text-xs">
             <Feature label="Source grounding" />
             <Feature label="Truth layer" />
             <Feature label="Cross-output checks" />
             <Feature label="AI Voice Assistant" />
           </div>
         </div>
-        <div className="p-8 sm:p-12 bg-white text-slate-900">
-          <div className="max-w-md mx-auto">
-            <h2 className="text-2xl font-black">{mode === 'login' ? 'Sign in' : 'Create account'}</h2>
-            <p className="text-sm text-slate-500 mt-1">Operator access to the content transformation workspace.</p>
+
+        {/* Right Column: Authentication Card */}
+        <div className="lg:col-span-5 p-6 sm:p-10 bg-white text-slate-900 flex flex-col justify-between">
+          <div className="max-w-md mx-auto w-full">
+            {/* Mode Switcher Tabs */}
+            <div className="grid grid-cols-2 p-1 bg-slate-100 rounded-xl mb-6 text-sm font-bold">
+              <button
+                type="button"
+                onClick={() => { setMode('login'); setError(''); setNotice(''); }}
+                className={`py-2 rounded-lg transition-all ${mode === 'login' ? 'bg-white text-slate-950 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
+              >
+                Sign In
+              </button>
+              <button
+                type="button"
+                onClick={() => { setMode('signup'); setError(''); setNotice(''); }}
+                className={`py-2 rounded-lg transition-all ${mode === 'signup' ? 'bg-white text-slate-950 shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
+              >
+                Create Account
+              </button>
+            </div>
+
+            <div>
+              <h2 className="text-2xl font-black text-slate-900">
+                {mode === 'login' ? 'Welcome back' : 'Create an account'}
+              </h2>
+              <p className="text-sm text-slate-500 mt-1">
+                {mode === 'login'
+                  ? 'Operator access to the content transformation workspace.'
+                  : 'Get started with verified multi-modal content generation.'}
+              </p>
+            </div>
+
             {!isSupabaseConfigured && (
-              <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs text-amber-900">
-                Supabase is not configured yet. Add your Supabase URL and anon key to <b>.env</b>.
+              <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-3.5 text-xs text-amber-900 flex items-start gap-2.5">
+                <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                <div>
+                  <span className="font-bold">Supabase is not configured yet.</span> Add your Supabase URL and anon key to <b className="font-mono">.env</b> to enable full persistent auth.
+                </div>
               </div>
             )}
-            {error && <div className="mt-5 rounded-2xl bg-red-50 border border-red-200 p-3 text-sm text-red-700">{error}</div>}
-            {notice && <div className="mt-5 rounded-2xl bg-emerald-50 border border-emerald-200 p-3 text-sm text-emerald-700">{notice}</div>}
-            <form onSubmit={submit} className="mt-6 space-y-4">
+
+            {error && (
+              <div className="mt-4 rounded-xl bg-red-50 border border-red-200 p-3 text-sm text-red-700 flex items-start gap-2">
+                <XCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+                <div>{error}</div>
+              </div>
+            )}
+
+            {notice && (
+              <div className="mt-4 rounded-xl bg-emerald-50 border border-emerald-200 p-3 text-sm text-emerald-700 flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                <div>{notice}</div>
+              </div>
+            )}
+
+            <form onSubmit={submit} className="mt-5 space-y-4">
               {mode === 'signup' && (
-                <Field label="Full name">
-                  <input value={name} onChange={(e) => setName(e.target.value)} required className="input" placeholder="Your name" />
-                </Field>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+                    Full name
+                  </label>
+                  <div className="relative">
+                    <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                    <input
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
+                      className="input pl-10"
+                      placeholder="Your name"
+                    />
+                  </div>
+                </div>
               )}
-              <Field label="Email">
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="input" placeholder="you@example.com" />
-              </Field>
-              <Field label="Password">
-                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} className="input" placeholder="At least 6 characters" />
-              </Field>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+                  Email address
+                </label>
+                <div className="relative">
+                  <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="input pl-10"
+                    placeholder="you@example.com"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+                  Password
+                </label>
+                <div className="relative">
+                  <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    minLength={6}
+                    className="input pl-10 pr-10"
+                    placeholder="At least 6 characters"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
               <button
                 disabled={busy || !isSupabaseConfigured}
-                className="w-full py-3.5 rounded-2xl bg-slate-950 text-white font-bold flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-600/25 transition disabled:opacity-50 mt-2"
               >
                 {busy ? (
                   <span className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
                 ) : mode === 'login' ? (
-                  <LogIn className="w-4" />
+                  <>
+                    <LogIn className="w-4 h-4" />
+                    <span>Sign in to Studio</span>
+                  </>
                 ) : (
-                  <UserPlus className="w-4" />
+                  <>
+                    <UserPlus className="w-4 h-4" />
+                    <span>Create Operator Account</span>
+                  </>
                 )}
-                {mode === 'login' ? 'Sign in' : 'Create account'}
               </button>
             </form>
-            <button
-              onClick={() => {
-                setMode(mode === 'login' ? 'signup' : 'login');
-                setError('');
-                setNotice('');
-              }}
-              className="mt-5 text-sm text-blue-700 font-semibold"
-            >
-              {mode === 'login' ? 'Need an account? Sign up' : 'Already registered? Sign in'}
-            </button>
+
+            <div className="mt-6 text-center">
+              <button
+                type="button"
+                onClick={() => {
+                  setMode(mode === 'login' ? 'signup' : 'login');
+                  setError('');
+                  setNotice('');
+                }}
+                className="text-xs font-semibold text-blue-600 hover:text-blue-700 transition"
+              >
+                {mode === 'login'
+                  ? "Don't have an account yet? Create one"
+                  : 'Already registered? Return to sign in'}
+              </button>
+            </div>
+          </div>
+
+          <div className="mt-6 pt-4 border-t border-slate-100 text-center text-[11px] text-slate-400">
+            SIH26154 AI Multi-Modal Content Engine • Powered by Gemini &amp; OpenRouter
           </div>
         </div>
       </div>
@@ -274,9 +474,8 @@ function AppShell() {
       <div className="flex">
         {/* Sidebar Nav */}
         <aside
-          className={`${
-            mobile ? 'fixed inset-y-16 left-0 z-20 w-72' : 'hidden'
-          } lg:block lg:w-64 bg-slate-950 text-slate-300 min-h-[calc(100vh-4rem)] p-3 shrink-0 flex flex-col justify-between`}
+          className={`${mobile ? 'fixed inset-y-16 left-0 z-20 w-72' : 'hidden'
+            } lg:block lg:w-64 bg-slate-950 text-slate-300 min-h-[calc(100vh-4rem)] p-3 shrink-0 flex flex-col justify-between`}
         >
           <div>
             <div className="px-3 pt-3 pb-2 text-[11px] font-bold uppercase tracking-widest text-slate-500">
@@ -405,9 +604,8 @@ function Nav({
   return (
     <button
       onClick={onClick}
-      className={`w-full flex items-center justify-between px-3 py-3 rounded-xl text-sm font-semibold mb-1 transition ${
-        active ? 'bg-blue-600 text-white' : 'hover:bg-slate-900 text-slate-400 hover:text-white'
-      }`}
+      className={`w-full flex items-center justify-between px-3 py-3 rounded-xl text-sm font-semibold mb-1 transition ${active ? 'bg-blue-600 text-white' : 'hover:bg-slate-900 text-slate-400 hover:text-white'
+        }`}
     >
       <div className="flex items-center gap-3">
         {React.cloneElement(icon as React.ReactElement<any>, { className: 'w-4 h-4' })}
@@ -836,9 +1034,8 @@ function ContentStudio({
                 <button
                   type="button"
                   onClick={handleDictate}
-                  className={`text-xs font-bold flex items-center gap-1 px-2.5 py-1 rounded-lg transition ${
-                    isDictating ? 'bg-red-100 text-red-700 animate-pulse' : 'text-blue-600 hover:bg-blue-50'
-                  }`}
+                  className={`text-xs font-bold flex items-center gap-1 px-2.5 py-1 rounded-lg transition ${isDictating ? 'bg-red-100 text-red-700 animate-pulse' : 'text-blue-600 hover:bg-blue-50'
+                    }`}
                 >
                   <Mic className="w-3.5" />
                   {isDictating ? 'Listening… (click to stop)' : 'Dictate'}
@@ -861,11 +1058,10 @@ function ContentStudio({
                   key={id}
                   type="button"
                   onClick={() => toggle(id)}
-                  className={`p-4 rounded-2xl border text-left transition ${
-                    outputs.includes(id)
+                  className={`p-4 rounded-2xl border text-left transition ${outputs.includes(id)
                       ? 'border-blue-500 bg-blue-50'
                       : 'border-slate-200 bg-white hover:border-slate-300'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center justify-between">
                     <Icon className={`w-5 ${outputs.includes(id) ? 'text-blue-600' : 'text-slate-400'}`} />
@@ -952,9 +1148,8 @@ function ContentStudio({
                         setActive(id);
                         setEditingOutput(false);
                       }}
-                      className={`px-3 py-2 rounded-xl text-xs font-bold transition ${
-                        active === id ? 'bg-slate-950 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                      }`}
+                      className={`px-3 py-2 rounded-xl text-xs font-bold transition ${active === id ? 'bg-slate-950 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                        }`}
                     >
                       {labelFor(id)}
                     </button>
@@ -1089,10 +1284,10 @@ function FileBadge({ file }: { file: File }) {
   const I = file.type.startsWith('image/')
     ? FileImage
     : file.type.startsWith('audio/')
-    ? FileAudio
-    : file.type.startsWith('video/')
-    ? FileVideo
-    : FileText;
+      ? FileAudio
+      : file.type.startsWith('video/')
+        ? FileVideo
+        : FileText;
   return (
     <div className="w-14 h-14 rounded-2xl bg-blue-100 text-blue-700 grid place-items-center shadow-sm">
       <I />
@@ -1116,13 +1311,12 @@ function Metric({ title, value }: { title: string; value: string }) {
 function Status({ status }: { status: string }) {
   return (
     <span
-      className={`shrink-0 text-[10px] font-black uppercase px-2 py-1 rounded-lg ${
-        status === 'verified'
+      className={`shrink-0 text-[10px] font-black uppercase px-2 py-1 rounded-lg ${status === 'verified'
           ? 'bg-emerald-100 text-emerald-700'
           : status === 'contradicted'
-          ? 'bg-red-100 text-red-700'
-          : 'bg-amber-100 text-amber-700'
-      }`}
+            ? 'bg-red-100 text-red-700'
+            : 'bg-amber-100 text-amber-700'
+        }`}
     >
       {status}
     </span>
@@ -1409,7 +1603,7 @@ function SettingsPage() {
 
       <Card title="Environment Configuration" icon={<Settings />}>
         <pre className="bg-slate-950 text-slate-100 rounded-2xl p-5 overflow-auto text-xs leading-6">
-{`VITE_SUPABASE_URL="https://YOUR-PROJECT-ID.supabase.co"
+          {`VITE_SUPABASE_URL="https://YOUR-PROJECT-ID.supabase.co"
 VITE_SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY"
 SUPABASE_SERVICE_ROLE_KEY="YOUR_SUPABASE_SERVICE_ROLE_KEY"
 AGENTIC_AI_PROVIDER="openrouter"

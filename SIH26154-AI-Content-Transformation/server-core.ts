@@ -21,6 +21,7 @@ const upload = multer({
 
 await fs.mkdir(uploadDir, { recursive: true });
 app.use(express.json({ limit: '2mb' }));
+app.use(express.static(path.join(process.cwd(), 'public')));
 
 app.get('/api/health', (_req, res) => {
   const provider = (process.env.AGENTIC_AI_PROVIDER || 'gemini').toLowerCase();
