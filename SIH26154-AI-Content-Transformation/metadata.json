@@ -1,0 +1,8 @@
+{
+  "project": "SIH26154 Content Transformation",
+  "problemStatement": "SIH26154",
+  "title": "Gen AI Platform for Automated Content Transformation",
+  "scope": "AI content transformation",
+  "storage": "Supabase Database + Supabase Storage",
+  "primaryAI": "Google Gemini"
+}
