@@ -57,8 +57,8 @@ export function ChatAssistant({ activeProject }: ChatAssistantProps) {
       id: 'greeting',
       role: 'assistant',
       content: activeProject
-        ? `Hello! I am your SIH26154 Content Transformation Assistant. I am linked to project **"${activeProject.title}"**. You can type or speak questions about the source document, Truth Layer facts, generated artefacts, or fact verification claims.`
-        : `Hello! I am your SIH26154 Gen AI Content Transformation Assistant. You can ask me to summarize documents, explain truth layer facts, review artefacts, or speak to me using voice input.`,
+        ? `Hello! I am AI Buddy, your Content Transformation Assistant. I am linked to project **"${activeProject.title}"**. You can type or speak questions about the source document, Truth Layer facts, generated artefacts, or fact verification claims.`
+        : `Hello! I am AI Buddy, your Gen AI Content Transformation Assistant. You can ask me to summarize documents, explain truth layer facts, review artefacts, or speak to me using voice input.`,
       inputMode: 'text',
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     };
@@ -348,7 +348,7 @@ export function ChatAssistant({ activeProject }: ChatAssistantProps) {
         'Verify claims against the Shared Truth Layer.',
       ]
     : [
-        'How does SIH26154 Content Transformation work?',
+        'How does AI Buddy work?',
         'Explain the Shared Truth Layer architecture.',
         'What output artefacts can I generate?',
         'How does cross-output consistency checking work?',
@@ -364,7 +364,7 @@ export function ChatAssistant({ activeProject }: ChatAssistantProps) {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-black text-slate-900 text-base">SIH26154 AI Assistant</span>
+              <span className="font-black text-slate-900 text-base">AI Buddy</span>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
                 Online
               </span>

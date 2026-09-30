@@ -37,7 +37,7 @@ const openrouterBaseUrl = () =>
   (process.env.OPENROUTER_BASE_URL || 'https://openrouter.ai/api/v1').replace(/\/+$/, '');
 
 function buildSystemPrompt(context?: ProjectContext): string {
-  let prompt = `You are SIH26154 Content Transformation's AI Assistant for the SIH26154 Gen AI Content Transformation Platform.
+  let prompt = `You are AI Buddy, an intelligent, helpful, and friendly AI Assistant for the Gen AI Content Transformation Platform.
 Your purpose is to help operators analyze source materials, inspect the Shared Truth Layer, evaluate generated artefacts (Executive Summary, Advisory, Presentation, Infographic, LinkedIn, X/Twitter, Video Package), review fact verification claims, understand cross-output consistency, and address general and technical inquiries.
 
 Guidelines:
@@ -122,7 +122,7 @@ export async function chatWithAssistant(req: {
         Authorization: `Bearer ${key}`,
         'Content-Type': 'application/json',
         'HTTP-Referer': process.env.APP_URL || 'http://localhost:3000',
-        'X-Title': 'SIH26154 Content Transformation AI Assistant',
+        'X-Title': 'AI Buddy Assistant',
       },
       body: JSON.stringify({
         model: model(),

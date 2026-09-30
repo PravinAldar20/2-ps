@@ -112,8 +112,8 @@ function Login() {
                   <Sparkles className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <div className="font-black tracking-tight text-lg text-white">SIH26154 Content Transformation</div>
-                  <div className="text-[11px] text-blue-300 font-medium">SIH26154 • Gen AI Content Transformation</div>
+                  <div className="font-black tracking-tight text-lg text-white">AI Buddy</div>
+                  <div className="text-[11px] text-blue-300 font-medium">AI Buddy • Gen AI Content Transformation</div>
                 </div>
               </div>
               <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] font-medium text-cyan-300">
@@ -344,7 +344,7 @@ function Login() {
           </div>
 
           <div className="mt-6 pt-4 border-t border-slate-100 text-center text-[11px] text-slate-400">
-            SIH26154 AI Multi-Modal Content Engine • Powered by Gemini &amp; OpenRouter
+            AI Buddy Multi-Modal Content Engine • Powered by Gemini &amp; OpenRouter
           </div>
         </div>
       </div>
@@ -443,9 +443,9 @@ function AppShell() {
             <Sparkles className="w-5" />
           </div>
           <div>
-            <div className="font-black text-slate-900 tracking-tight">SIH26154 Content Transformation</div>
+            <div className="font-black text-slate-900 tracking-tight">AI Buddy</div>
             <div className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">
-              SIH26154 • GEN AI PLATFORM
+              AI BUDDY • GEN AI PLATFORM
             </div>
           </div>
         </div>
@@ -546,7 +546,7 @@ function AppShell() {
           </div>
 
           <div className="rounded-2xl bg-slate-900 border border-slate-800 p-4 text-[11px] leading-5 text-slate-400">
-            <div className="font-bold text-white mb-1">SIH26154 Pipeline</div>
+            <div className="font-bold text-white mb-1">AI Buddy Pipeline</div>
             <div>Source → Truth Layer → Transform → Verify → Consistency → Red Team → Human Approval → Export</div>
           </div>
         </aside>
@@ -577,11 +577,11 @@ function AppShell() {
       {tab !== 'chat' && (
         <button
           onClick={() => setTab('chat')}
-          title="Open SIH26154 AI Voice & Text Assistant"
+          title="Open AI Buddy Voice & Text Assistant"
           className="fixed bottom-6 right-6 z-40 p-4 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-xl shadow-blue-500/30 hover:scale-105 transition flex items-center gap-2 font-bold text-sm"
         >
           <Bot className="w-5 h-5" />
-          <span className="hidden sm:inline">AI Assistant</span>
+          <span className="hidden sm:inline">AI Buddy</span>
         </button>
       )}
     </div>
@@ -856,7 +856,7 @@ function ContentStudio({
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = `SIH26154-${active}.txt`;
+    a.download = `AIBuddy-${active}.txt`;
     a.click();
     URL.revokeObjectURL(a.href);
   };
@@ -946,7 +946,7 @@ function ContentStudio({
       <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-4">
         <div>
           <div className="text-xs font-bold text-blue-600 uppercase tracking-widest">
-            SIH26154 • GEN AI PLATFORM
+            AI BUDDY • GEN AI PLATFORM
           </div>
           <h1 className="text-3xl font-black mt-1">Content Transformation Studio</h1>
           <p className="text-sm text-slate-500 mt-2 max-w-2xl">
@@ -967,7 +967,7 @@ function ContentStudio({
               className="px-3 py-2 rounded-xl bg-blue-50 text-blue-700 border border-blue-200 text-xs font-bold flex items-center gap-1.5 hover:bg-blue-100 transition"
             >
               <Bot className="w-3.5 h-3.5" />
-              <span>Ask AI Assistant</span>
+              <span>Ask AI Buddy</span>
             </button>
           )}
         </div>
